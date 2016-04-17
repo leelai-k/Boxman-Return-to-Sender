@@ -19,9 +19,18 @@
 
 // Here is a small helper for you ! Have a look.
 #include "ResourcePath.hpp"
+#include "Engine.hpp"
+#include <chrono>
+#include <thread>
 
 int main(int, char const**)
 {
+    using namespace std::chrono;
+    using namespace std::this_thread;
+    float x = 0;
+    float y = 0;
+    
+    Engine* e = new Engine();
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
 
@@ -34,11 +43,13 @@ int main(int, char const**)
 
     // Load a sprite to display
     sf::Texture texture;
-    if (!texture.loadFromFile(resourcePath() + "cute_image.jpg")) {
+    if (!texture.loadFromFile(resourcePath() + "Boxman.png")) {
         return EXIT_FAILURE;
     }
-    sf::Sprite sprite(texture);
-
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    texture.setSmooth(true);
+    
     // Create a graphical text to display
     sf::Font font;
     if (!font.loadFromFile(resourcePath() + "sansation.ttf")) {
@@ -61,8 +72,22 @@ int main(int, char const**)
     {
         // Process events
         sf::Event event;
+        e->clearButton();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+            e->setLeft();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+            e->setRight();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+            e->setUp();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+            e->setDown();
+        }
         while (window.pollEvent(event))
         {
+            
             // Close window: exit
             if (event.type == sf::Event::Closed) {
                 window.close();
@@ -72,8 +97,24 @@ int main(int, char const**)
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
+            /*
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left) {
+                e->setLeft();
+            }
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right) {
+                e->setRight();
+            }
+            if (event.type == sf::Event::KeyPressed && ((event.key.code == sf::Keyboard::Up) || (event.key.code == sf::Keyboard::Space))) {
+                e->setUp();
+            }
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down) {
+                e->setDown();
+            }
+             */
+            
         }
-
+        sprite.setPosition(e->getX(), e->getY());
+        sleep_for(nanoseconds(18000000));
         // Clear screen
         window.clear();
 
@@ -85,6 +126,7 @@ int main(int, char const**)
 
         // Update the window
         window.display();
+        e->cycle();
     }
 
     return EXIT_SUCCESS;
