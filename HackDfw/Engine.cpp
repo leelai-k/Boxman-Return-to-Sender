@@ -11,8 +11,10 @@
 #define vmin 10
     
 Engine::Engine(){
+        current_Coor.ground = 513;
         current_Coor.x = 0;
-        current_Coor.y = 455;
+        current_Coor.y = current_Coor.ground - 145;
+        current_Coor.x_dist = 0;
         current_Coor.vx = 0;
         current_Coor.vy = 0;
         current_Coor.ax = 0;
@@ -124,9 +126,11 @@ void Engine::calc_variables(){
         }
     
     
-        current_Coor.x = current_Coor.x + current_Coor.vx;	//modify this in relation to the speed the background is moving
+        current_Coor.x = current_Coor.x + current_Coor.vx;
         current_Coor.y = current_Coor.y + current_Coor.vy;
-        
+    
+        current_Coor.x_dist = current_Coor.x_dist + current_Coor.vx;
+    
         if(current_Coor.x < 0){
             current_Coor.x = 0;
         }
@@ -137,10 +141,10 @@ void Engine::calc_variables(){
         if(current_Coor.y < 0){
             current_Coor.y = 0;
         }
-        if(current_Coor.y > 600 - 145){
-            current_Coor.y = 600 -145;
+        if(current_Coor.y > current_Coor.ground - 145){
+            current_Coor.y = current_Coor.ground - 145;
         }
-        if(current_Coor.y < 455){
+        if(current_Coor.y < current_Coor.ground - 145){
             current_Coor.air = true;
         }
         else{
@@ -156,6 +160,9 @@ double Engine::getX(){
 double Engine::getY(){
         return current_Coor.y;
     }
+double Engine::getDist(){
+        return current_Coor.x_dist;
+}
 void Engine::setUp(){
         current_Coor.up = true;
     }

@@ -14,8 +14,10 @@
 class Engine{
 public:
     typedef struct Coordinate_Struct{
+        double ground;
         double x,
         y,
+        x_dist,
         vx,
         vy,
         ax,
@@ -38,6 +40,8 @@ public:
     void calc_variables();
     
     double getX();
+    
+    double getDist();
     
     double getY();
     
